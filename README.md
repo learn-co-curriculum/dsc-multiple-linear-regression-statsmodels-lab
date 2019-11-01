@@ -53,6 +53,7 @@ boston_features = pd.concat([boston_features, rad_dummy, tax_dummy], axis=1)
 ```python
 age = boston_features['AGE']
 age_mean = np.mean(boston_features['AGE'])
+age_var = np.var(boston_features['AGE'])
 b = boston_features['B']
 b_min = min(b)
 b_max = max(b)
@@ -68,7 +69,7 @@ boston_features['CRIM'] = (logcrim-min(logcrim))/(max(logcrim)-min(logcrim))
 boston_features['DIS'] = (logdis-min(logdis))/(max(logdis)-min(logdis))
 
 # Standardization
-boston_features['AGE'] = (age-age_mean)/np.sqrt(np.var(age))
+boston_features['AGE'] = (age-age_mean)/np.sqrt(age_var)
 boston_features['INDUS'] = (logindus-np.mean(logindus))/np.sqrt(np.var(logindus))
 boston_features['LSTAT'] = (loglstat-np.mean(loglstat))/np.sqrt(np.var(loglstat))
 boston_features['PTRATIO'] = (logptratio-np.mean(logptratio))/(np.sqrt(np.var(logptratio)))
@@ -111,6 +112,7 @@ boston_features = pd.concat([boston_features, rad_dummy, tax_dummy], axis=1)
 # __SOLUTION__ 
 age = boston_features['AGE']
 age_mean = np.mean(boston_features['AGE'])
+age_var = np.var(boston_features['AGE'])
 b = boston_features['B']
 b_min = min(b)
 b_max = max(b)
@@ -126,7 +128,7 @@ boston_features['CRIM'] = (logcrim-min(logcrim))/(max(logcrim)-min(logcrim))
 boston_features['DIS'] = (logdis-min(logdis))/(max(logdis)-min(logdis))
 
 # Standardization
-boston_features['AGE'] = (age-age_mean)/np.sqrt(np.var(age))
+boston_features['AGE'] = (age-age_mean)/np.sqrt(age_var)
 boston_features['INDUS'] = (logindus-np.mean(logindus))/np.sqrt(np.var(logindus))
 boston_features['LSTAT'] = (loglstat-np.mean(loglstat))/np.sqrt(np.var(loglstat))
 boston_features['PTRATIO'] = (logptratio-np.mean(logptratio))/(np.sqrt(np.var(logptratio)))
@@ -300,7 +302,7 @@ model.summary()
   <th>Date:</th>             <td>Fri, 01 Nov 2019</td> <th>  Prob (F-statistic):</th> <td>5.08e-153</td>
 </tr>
 <tr>
-  <th>Time:</th>                 <td>15:44:45</td>     <th>  Log-Likelihood:    </th> <td> -1458.2</td> 
+  <th>Time:</th>                 <td>17:29:56</td>     <th>  Log-Likelihood:    </th> <td> -1458.2</td> 
 </tr>
 <tr>
   <th>No. Observations:</th>      <td>   506</td>      <th>  AIC:               </th> <td>   2942.</td> 
@@ -467,7 +469,7 @@ pred_df['CRIM'] = (np.log(pred_df['CRIM'])-min(logcrim))/(max(logcrim)-min(logcr
 pred_df['DIS'] = (np.log(pred_df['DIS'])-min(logdis))/(max(logdis)-min(logdis))
 
 # Standardization
-pred_df['AGE'] = (pred_df['AGE']-age_mean)/np.sqrt(np.var(age))
+pred_df['AGE'] = (pred_df['AGE']-age_mean)/np.sqrt(age_var)
 pred_df['INDUS'] = (np.log(pred_df['INDUS'])-np.mean(logindus))/np.sqrt(np.var(logindus))
 pred_df['LSTAT'] = (np.log(pred_df['LSTAT'])-np.mean(loglstat))/np.sqrt(np.var(loglstat))
 pred_df['PTRATIO'] = (np.log(pred_df['PTRATIO'])-np.mean(logptratio))/(np.sqrt(np.var(logptratio)))
@@ -479,7 +481,7 @@ prediction
 
 
 
-    20.72319191586213
+    23.43198444890964
 
 
 
