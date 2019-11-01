@@ -30,8 +30,8 @@ import numpy as np
 from sklearn.datasets import load_boston
 boston = load_boston()
 
-boston_features = pd.DataFrame(boston.data, columns = boston.feature_names)
-boston_features = boston_features.drop(['NOX', 'ZN'],axis=1)
+boston_features = pd.DataFrame(boston.data, columns=boston.feature_names)
+boston_features = boston_features.drop(['NOX', 'ZN'], axis=1)
 
 # First, create bins for based on the values observed. 3 values will result in 2 bins
 bins = [0, 6, 24]
@@ -52,7 +52,10 @@ boston_features = pd.concat([boston_features, rad_dummy, tax_dummy], axis=1)
 
 ```python
 age = boston_features['AGE']
+age_mean = np.mean(boston_features['AGE'])
 b = boston_features['B']
+b_min = min(b)
+b_max = max(b)
 logcrim = np.log(boston_features['CRIM'])
 logdis = np.log(boston_features['DIS'])
 logindus = np.log(boston_features['INDUS'])
@@ -60,12 +63,12 @@ loglstat = np.log(boston_features['LSTAT'])
 logptratio = np.log(boston_features['PTRATIO'])
 
 # Min-Max scaling
-boston_features['B'] = (b-min(b))/(max(b)-min(b))
+boston_features['B'] = (b-b_min)/(b_max-b_min)
 boston_features['CRIM'] = (logcrim-min(logcrim))/(max(logcrim)-min(logcrim))
 boston_features['DIS'] = (logdis-min(logdis))/(max(logdis)-min(logdis))
 
 # Standardization
-boston_features['AGE'] = (age-np.mean(age))/np.sqrt(np.var(age))
+boston_features['AGE'] = (age-age_mean)/np.sqrt(np.var(age))
 boston_features['INDUS'] = (logindus-np.mean(logindus))/np.sqrt(np.var(logindus))
 boston_features['LSTAT'] = (loglstat-np.mean(loglstat))/np.sqrt(np.var(loglstat))
 boston_features['PTRATIO'] = (logptratio-np.mean(logptratio))/(np.sqrt(np.var(logptratio)))
@@ -84,8 +87,8 @@ import numpy as np
 from sklearn.datasets import load_boston
 boston = load_boston()
 
-boston_features = pd.DataFrame(boston.data, columns = boston.feature_names)
-boston_features = boston_features.drop(['NOX', 'ZN'],axis=1)
+boston_features = pd.DataFrame(boston.data, columns=boston.feature_names)
+boston_features = boston_features.drop(['NOX', 'ZN'], axis=1)
 
 # First, create bins for based on the values observed. 3 values will result in 2 bins
 bins = [0, 6,  24]
@@ -107,7 +110,10 @@ boston_features = pd.concat([boston_features, rad_dummy, tax_dummy], axis=1)
 ```python
 # __SOLUTION__ 
 age = boston_features['AGE']
+age_mean = np.mean(boston_features['AGE'])
 b = boston_features['B']
+b_min = min(b)
+b_max = max(b)
 logcrim = np.log(boston_features['CRIM'])
 logdis = np.log(boston_features['DIS'])
 logindus = np.log(boston_features['INDUS'])
@@ -115,12 +121,12 @@ loglstat = np.log(boston_features['LSTAT'])
 logptratio = np.log(boston_features['PTRATIO'])
 
 # Min-Max scaling
-boston_features['B'] = (b-min(b))/(max(b)-min(b))
+boston_features['B'] = (b-b_min)/(b_max-b_min)
 boston_features['CRIM'] = (logcrim-min(logcrim))/(max(logcrim)-min(logcrim))
 boston_features['DIS'] = (logdis-min(logdis))/(max(logdis)-min(logdis))
 
 # Standardization
-boston_features['AGE'] = (age-np.mean(age))/np.sqrt(np.var(age))
+boston_features['AGE'] = (age-age_mean)/np.sqrt(np.var(age))
 boston_features['INDUS'] = (logindus-np.mean(logindus))/np.sqrt(np.var(logindus))
 boston_features['LSTAT'] = (loglstat-np.mean(loglstat))/np.sqrt(np.var(loglstat))
 boston_features['PTRATIO'] = (logptratio-np.mean(logptratio))/(np.sqrt(np.var(logptratio)))
@@ -268,9 +274,13 @@ y = pd.DataFrame(boston.target, columns = ['price'])
 # __SOLUTION__ 
 import statsmodels.api as sm
 X_int = sm.add_constant(X)
-model = sm.OLS(y,X_int).fit()
+model = sm.OLS(y, X_int).fit()
 model.summary()
 ```
+
+    /anaconda3/lib/python3.7/site-packages/numpy/core/fromnumeric.py:2389: FutureWarning: Method .ptp is deprecated and will be removed in a future version. Use numpy.ptp instead.
+      return ptp(axis=axis, out=out, **kwargs)
+
 
 
 
@@ -287,10 +297,10 @@ model.summary()
   <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>   144.9</td> 
 </tr>
 <tr>
-  <th>Date:</th>             <td>Wed, 21 Aug 2019</td> <th>  Prob (F-statistic):</th> <td>5.08e-153</td>
+  <th>Date:</th>             <td>Fri, 01 Nov 2019</td> <th>  Prob (F-statistic):</th> <td>5.08e-153</td>
 </tr>
 <tr>
-  <th>Time:</th>                 <td>09:53:00</td>     <th>  Log-Likelihood:    </th> <td> -1458.2</td> 
+  <th>Time:</th>                 <td>15:44:45</td>     <th>  Log-Likelihood:    </th> <td> -1458.2</td> 
 </tr>
 <tr>
   <th>No. Observations:</th>      <td>   506</td>      <th>  AIC:               </th> <td>   2942.</td> 
@@ -391,6 +401,20 @@ linreg.fit(X, y)
 
 ```python
 # __SOLUTION__ 
+# intercept
+linreg.intercept_
+```
+
+
+
+
+    array([8.64415614])
+
+
+
+
+```python
+# __SOLUTION__ 
 # coefficients
 linreg.coef_
 ```
@@ -404,33 +428,15 @@ linreg.coef_
 
 
 
+## Interpret the coefficients for PTRATIO, LSTAT
+Write your response here:
+
 
 ```python
-# __SOLUTION__ 
-# intercept
-linreg.intercept_
+# __SOLUTION__
+# PTRATIO: For each additional unit of the log-transformed PTRATIO, the price changes by -1.4867.
+# LSTAT: For each additional unit of the log-transformed LSTAT, the price changes by -5.6288.
 ```
-
-
-
-
-    array([8.64415614])
-
-
-
-## Interpret the coefficients for PTRATIO, PTRATIO, LSTAT
-
-- CRIM: per capita crime rate by town
-- INDUS: proportion of non-retail business acres per town
-- CHAS: Charles River dummy variable (= 1 if tract bounds river; 0 otherwise)
-- RM: average number of rooms per dwelling
-- AGE: proportion of owner-occupied units built prior to 1940
-- DIS: weighted distances to five Boston employment centres
-- RAD: index of accessibility to radial highways
-- TAX: full-value property-tax rate per $10,000
-- PTRATIO: pupil-teacher ratio by town
-- B: 1000(Bk - 0.63)^2 where Bk is the proportion of blacks by town
-- LSTAT: % lower status of the population
 
 ## Predict the house price given the following characteristics (before manipulation!!)
 
@@ -447,6 +453,35 @@ Make sure to transform your variables as needed!
 - LSTAT: 10.87
 - RAD: 8
 - TAX: 284
+
+
+```python
+# __SOLUTION__
+# Create New DataFrame
+pred_new = [1.0, 0.15, 6.07, 1.0, 6.1, 33.2, 7.6, 17.0, 383.0, 10.87, 1, 1, 0]
+pred_df = pd.DataFrame([pred_new], columns=X_int.columns)
+
+# Min-Max scaling
+pred_df['B'] = (pred_df['B']-b_min)/(b_max-b_min)
+pred_df['CRIM'] = (np.log(pred_df['CRIM'])-min(logcrim))/(max(logcrim)-min(logcrim))
+pred_df['DIS'] = (np.log(pred_df['DIS'])-min(logdis))/(max(logdis)-min(logdis))
+
+# Standardization
+pred_df['AGE'] = (pred_df['AGE']-age_mean)/np.sqrt(np.var(age))
+pred_df['INDUS'] = (np.log(pred_df['INDUS'])-np.mean(logindus))/np.sqrt(np.var(logindus))
+pred_df['LSTAT'] = (np.log(pred_df['LSTAT'])-np.mean(loglstat))/np.sqrt(np.var(loglstat))
+pred_df['PTRATIO'] = (np.log(pred_df['PTRATIO'])-np.mean(logptratio))/(np.sqrt(np.var(logptratio)))
+
+prediction = model.predict(pred_df).iloc[0]
+prediction
+```
+
+
+
+
+    20.72319191586213
+
+
 
 ## Summary
 Congratulations! You pre-processed the Boston Housing data using scaling and standardization. You also fitted your first multiple linear regression model on the Boston Housing data using statsmodels and scikit-learn!
